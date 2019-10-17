@@ -8,8 +8,7 @@ const zapisFormularza = async (req, res) => {
     await db.query(`update ostatnio_uzyte set baza = $1, fk_wepu = $2;`, 
       [baza, wersjaPumy]);
     
-    client = db.dajKlienta(baza);
-    await client.connect();
+    client = db.polacz(baza);
     await client.query(`begin`);
     for (const schemat of schematy) {
       await db.query(`update wersja_schematu set wersja_schematu = $1 where id = $2`, 

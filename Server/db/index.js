@@ -3,13 +3,14 @@ const config = require('./config');
 
 const pool = new Pool(config);
 
-const dajKlienta = (nazwaBazy) => {
-  configBazy = {...config};
-  configBazy.database = nazwaBazy;
-  return new Client(configBazy);
+const polacz = async (nazwaBazy) => {
+  config.database = nazwaBazy;
+  const client = new Client(config);
+  await client.connect();
+  return client;
 }
 
 module.exports = {
   query: (text, params) => pool.query(text, params),
-  dajKlienta,
+  polacz,
 }
