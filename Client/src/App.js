@@ -67,7 +67,11 @@ class App extends Component {
       headers: {
         'Content-Type': 'application/json'
       },      
-      body: JSON.stringify(this.state),
+      body: JSON.stringify({
+        baza: this.state.ostatnioUzytaBaza,
+        wersjaPumy: this.state.ostatnioUzytaWersjaPumy,
+        schematy: this.state.wersjeSchematow,
+      }),
     });
   }
 

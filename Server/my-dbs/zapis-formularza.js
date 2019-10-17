@@ -1,17 +1,18 @@
 const db = require('../db');
 
 const zapisFormularza = async (req, res) => {
-  const { ostatnioUzytaBaza, ostatnioUzytaWersjaPumy, wersjeSchematow } = req.body;
+  const { baza, wersjaPumy, schematy } = req.body;
 
   await db.query(`update ostatnio_uzyte set baza = $1, fk_wepu = $2;`, 
-    [ostatnioUzytaBaza, ostatnioUzytaWersjaPumy]);
+    [baza, wersjaPumy]);
 
-  for (const wersjaSchematu of wersjeSchematow) {
+  
+  for (const schemat of schematy) {
     await db.query(`update wersja_schematu set wersja_schematu = $1 where id = $2`, 
-      [wersjaSchematu.wersja_schematu, wersjaSchematu.id]);
+      [schemat.wersja_schematu, schemat.id]);
   }
 
-  res.json({});
+  res.sendStatus(200);
 }
 
 module.exports = zapisFormularza;
