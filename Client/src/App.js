@@ -8,25 +8,25 @@ class App extends Component {
       bazy: [],
       wersjePumy: [],
       ostatnioUzytaBaza: '',
-      ostatnioUzytySchemat: 1,
+      ostatnioUzytaWersjaPumy: 1,
       wersjeSchematow: [],
     }
   }  
 
   getData() {
-    fetch('http://localhost:3000/my-dbs')
+    fetch('http://localhost:5000/my-dbs')
       .then(res => res.json())
       .then(data => this.setState({
         bazy: data.bazy,
         wersjePumy: data.wersjePumy,
         ostatnioUzytaBaza: data.ostatnioUzyte.baza,
-        ostatnioUzytySchemat: data.ostatnioUzyte.schemat,
+        ostatnioUzytaWersjaPumy: data.ostatnioUzyte.fk_wepu,
       }))
       .catch(err => console.log(err));
   }
 
   getWersjeSchematow() {
-    const adres = 'http://localhost:3000/my-dbs/wersje-schematow/' + this.state.ostatnioUzytySchemat;
+    const adres = 'http://localhost:5000/my-dbs/wersje-schematow/' + this.state.ostatnioUzytaWersjaPumy;
 
     fetch(adres)
       .then(res => res.json())
@@ -37,19 +37,16 @@ class App extends Component {
   }
 
   handleOstatnioUzytaBaza = event => {
-    console.log(event.target);
     this.setState({ostatnioUzytaBaza: event.target.value});    
   }
 
-  handleZmienOstatnioUzytySchemat = event => {
-    console.log(event.target);
-    this.setState({ostatnioUzytySchemat: event.target.value});
-    this.getWersjeSchematow();
+  handleZmienOstatnioUzytaWersjaPumy = event => {
+    this.setState({ostatnioUzytaWersjaPumy: event.target.value}, () => {        
+      this.getWersjeSchematow();
+    });
   }
 
-  handleZmienWersjeSchematu = event => {
-    console.log(event.target);
-    
+  handleZmienWersjeSchematu = event => {   
     const wersjeSchematow = [...this.state.wersjeSchematow];
 
     wersjeSchematow
@@ -62,7 +59,7 @@ class App extends Component {
   handleZatwierdz = event => {   
     event.preventDefault();
 
-    fetch('http://localhost:3000/my-dbs/', {
+    fetch('http://localhost:5000/my-dbs/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -132,8 +129,8 @@ class App extends Component {
             <Col sm="10">
               <Form.Control 
                 as="select" 
-                value={this.state.ostatnioUzytySchemat} 
-                onChange={this.handleZmienOstatnioUzytySchemat}
+                value={this.state.ostatnioUzytaWersjaPumy} 
+                onChange={this.handleZmienOstatnioUzytaWersjaPumy}
               >
                 {wersjePumy}
               </Form.Control>
