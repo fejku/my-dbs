@@ -1,11 +1,154 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 
-function App() {
-  return (
-    <div className="App">
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      bazy: [],
+      wersjePumy: [],
+      ostatnioUzytaBaza: '',
+      ostatnioUzytySchemat: 1,
+      wersjeSchematow: [],
+    }
+  }  
 
-    </div>
-  );
+  getData() {
+    fetch('http://localhost:3000/my-dbs')
+      .then(res => res.json())
+      .then(data => this.setState({
+        bazy: data.bazy,
+        wersjePumy: data.wersjePumy,
+        ostatnioUzytaBaza: data.ostatnioUzyte.baza,
+        ostatnioUzytySchemat: data.ostatnioUzyte.schemat,
+      }))
+      .catch(err => console.log(err));
+  }
+
+  getWersjeSchematow() {
+    const adres = 'http://localhost:3000/my-dbs/wersje-schematow/' + this.state.ostatnioUzytySchemat;
+
+    fetch(adres)
+      .then(res => res.json())
+      .then(data => this.setState({
+        wersjeSchematow: data
+      }))
+      .catch(err => console.log(err));
+  }
+
+  handleOstatnioUzytaBaza = event => {
+    console.log(event.target);
+    this.setState({ostatnioUzytaBaza: event.target.value});    
+  }
+
+  handleZmienOstatnioUzytySchemat = event => {
+    console.log(event.target);
+    this.setState({ostatnioUzytySchemat: event.target.value});
+    this.getWersjeSchematow();
+  }
+
+  handleZmienWersjeSchematu = event => {
+    console.log(event.target);
+    
+    const wersjeSchematow = [...this.state.wersjeSchematow];
+
+    wersjeSchematow
+      .find((e) => e.nazwa_schematu === event.target.name)
+      .wersja_schematu = event.target.value;
+
+    this.setState({wersjeSchematow});
+  }
+
+  handleZatwierdz = event => {   
+    event.preventDefault();
+
+    fetch('http://localhost:3000/my-dbs/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },      
+      body: JSON.stringify(this.state),
+    });
+  }
+
+  componentDidMount() {
+    this.getData();
+    this.getWersjeSchematow();
+  }
+
+  render() {
+    const dbs = this.state.bazy.map(nazwaBazy => {
+      return (<option value={nazwaBazy}>{nazwaBazy}</option>)
+    });
+
+    const wersjePumy = this.state.wersjePumy.map(wersjaPumy => {
+      const { id, wersja } = wersjaPumy;
+      
+      return (
+        <option value={id}>{wersja}</option>
+      )
+    });
+
+    const wersjeSchematu = this.state.wersjeSchematow.map(wersjaSchematu => {
+      const { nazwa_schematu, wersja_schematu } = wersjaSchematu;
+
+      return (
+        <Form.Group as={Col} sm="2" controlId="test3">
+          <Row>
+            <Col sm="5">
+              <Form.Label>{nazwa_schematu}</Form.Label>
+            </Col>
+            <Col sm="7">
+              <Form.Control 
+                type="text" 
+                value={wersja_schematu} 
+                name={nazwa_schematu}
+                onChange={this.handleZmienWersjeSchematu}
+              />              
+            </Col>
+          </Row>
+        </Form.Group> 
+      )
+    });
+
+    return (
+      <Container>
+        <Form onSubmit={this.handleZatwierdz} encType="multipart/form-data">
+          <Form.Group as={Row} controlId="test">
+            <Form.Label column sm="2">Nazwa bazy</Form.Label>
+            <Col sm="10">
+              <Form.Control 
+                as="select" 
+                name="qwe"
+                value={this.state.ostatnioUzytaBaza}
+                onChange={this.handleOstatnioUzytaBaza}
+              >
+                {dbs}
+              </Form.Control>
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} controlId="test2">
+            <Form.Label column sm="2">Wersja pumy</Form.Label>
+            <Col sm="10">
+              <Form.Control 
+                as="select" 
+                value={this.state.ostatnioUzytySchemat} 
+                onChange={this.handleZmienOstatnioUzytySchemat}
+              >
+                {wersjePumy}
+              </Form.Control>
+            </Col>
+          </Form.Group>       
+          <Form.Row>
+            
+              {wersjeSchematu}
+   
+          </Form.Row>   
+          <Button variant="primary" type="submit">Zatwierdź</Button>                  
+        </Form>
+      </Container>
+    )
+  }
 }
 
 export default App;
