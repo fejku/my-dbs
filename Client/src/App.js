@@ -16,12 +16,14 @@ class App extends Component {
   getData() {
     fetch('http://localhost:5000/my-dbs')
       .then(res => res.json())
-      .then(data => this.setState({
-        bazy: data.bazy,
-        wersjePumy: data.wersjePumy,
-        ostatnioUzytaBaza: data.ostatnioUzyte.baza,
-        ostatnioUzytaWersjaPumy: data.ostatnioUzyte.fk_wepu,
-      }))
+      .then(data => this.setState(
+        {
+          bazy: data.bazy,
+          wersjePumy: data.wersjePumy,
+          ostatnioUzytaBaza: data.ostatnioUzyte.baza ? data.ostatnioUzyte.baza : data.bazy[0],
+          ostatnioUzytaWersjaPumy: data.ostatnioUzyte.fk_wepu ? data.ostatnioUzyte.fk_wepu : data.wersjePumy[0].id,
+        }, 
+        () => {this.getWersjeSchematow();}))
       .catch(err => console.log(err));
   }
 
@@ -41,9 +43,10 @@ class App extends Component {
   }
 
   handleZmienOstatnioUzytaWersjaPumy = event => {
-    this.setState({ostatnioUzytaWersjaPumy: event.target.value}, () => {        
-      this.getWersjeSchematow();
-    });
+    this.setState(
+      {ostatnioUzytaWersjaPumy: event.target.value},        
+      () => {this.getWersjeSchematow();}
+    );
   }
 
   handleZmienWersjeSchematu = event => {   
@@ -70,7 +73,6 @@ class App extends Component {
 
   componentDidMount() {
     this.getData();
-    this.getWersjeSchematow();
   }
 
   render() {
