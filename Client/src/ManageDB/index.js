@@ -6,7 +6,9 @@ function ManageDB(props) {
 
   const [polaczenie, setPolaczenie] = useState("?");
  
-  return <Polacz polaczenie={[polaczenie, setPolaczenie]} />
+  return (
+    <Polacz polaczenie={[polaczenie, setPolaczenie]} />
+  )
 }
 
 export default ManageDB;

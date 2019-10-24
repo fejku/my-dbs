@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DodajPolaczenie from './DodajPolaczenie';
 
 function Polacz(props) {
@@ -8,7 +8,7 @@ function Polacz(props) {
   const [polaczenie, setPolaczenie] = props.polaczenie;
   
   function handleDodajPolaczenie() {
-    setDodawanie(true);
+    setDodawanie(state => !state);
   }
 
   function handleZmienPolaczenie(e) {
@@ -25,21 +25,29 @@ function Polacz(props) {
   }
 
   return (
-    <div>
-      <div className="input-group mb-3">
-        <div className="input-group-prepend">
-          <label htmlFor="sel" className="input-group-text">Połączenie</label>
+    <div className="row">
+      <div className="col">
+        <div className="row">
+          <div className="col">
+            <div className="input-group mb-3">
+              <div className="input-group-prepend">
+                <label htmlFor="sel" className="input-group-text">Połączenie</label>
+              </div>
+              <select name="" id="sel" className="custom-select" onChange={handleZmienPolaczenie} value={polaczenie}>
+                <option value={null} key={null}>Wybierz</option>
+                <option value="1" key="1">1</option>
+                <option value="2" key="2">2</option>
+              </select>
+              <div className="input-group-append">
+                <button className="btn btn-outline-secondary" type="button" onClick={handleDodajPolaczenie}>+</button>
+                <button className="btn btn-outline-secondary" type="button" onClick={handleDodajPolaczenie}>Połącz</button>
+              </div>
+
+            </div>
+          </div>
         </div>
-        <select name="" id="sel" className="custom-select" onChange={handleZmienPolaczenie} value={polaczenie}>
-          <option value={null} key={null}>Wybierz</option>
-          <option value="1" key="1">1</option>
-          <option value="2" key="2">2</option>
-        </select>
-        <div className="input-group-append">
-          <button className="btn btn-outline-secondary" type="button" onClick={handleDodajPolaczenie}>+</button>
-        </div>
-        {dodajPolaczenie}
-      </div>
+        { dodawanie ? <DodajPolaczenie setDodawanie={setDodawanie} /> : null }
+      </div>      
     </div>
   )
 }
