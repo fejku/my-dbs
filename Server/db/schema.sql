@@ -14,15 +14,15 @@ create table mydbs.schemat(
 
 create table mydbs.wersja_schematu(
   id serial primary key,
-  fk_wepu integer not null references wersja_pumy(id),
-  fk_schemat integer not null references schemat(id),
+  fk_wepu integer not null references mydbs.wersja_pumy(id),
+  fk_schemat integer not null references mydbs.schemat(id),
   wersja_schematu text not null,
   unique (fk_wepu, fk_schemat)
 );
 
 create table mydbs.ostatnio_uzyte(
   baza text,
-  fk_wepu integer references wersja_pumy(id)
+  fk_wepu integer references mydbs.wersja_pumy(id)
 );
 
 create table mydbs.polaczenie(
