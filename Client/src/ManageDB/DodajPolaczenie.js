@@ -24,14 +24,17 @@ function DodajPolaczenie(props) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    fetch('http://localhost:5000/manage-db/polaczenie', {
+    fetch('http://localhost:5000/manage-db/polaczenia', {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(polaczenie),
-    }).then(response => response.json())
-      .then(response => console.log(response));
+    }).then(result => result.json())
+      .then(result => {
+        console.log(result)
+        props.setDodano(true);
+      });
 
     zamknijDodawanie();
   }
@@ -85,8 +88,10 @@ function DodajPolaczenie(props) {
           value={polaczenie.password}
           onChange={handleInputChange} />
       </div>
-      <button className="btn btn-outline-success mr-2">Dodaj</button>
-      <button type="button" className="btn btn-outline-danger" onClick={zamknijDodawanie}>Anuluj</button>
+      <div className="input-group mb-3">
+        <button className="btn btn-outline-success mr-2">Dodaj</button>
+        <button type="button" className="btn btn-outline-danger" onClick={zamknijDodawanie}>Anuluj</button>
+      </div>      
   </form>
   )
 }

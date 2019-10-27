@@ -20,19 +20,19 @@ create table mydbs.wersja_schematu(
   unique (fk_wepu, fk_schemat)
 );
 
-create table mydbs.ostatnio_uzyte(
-  baza text,
-  fk_wepu integer references mydbs.wersja_pumy(id)
-);
-
 create table mydbs.polaczenie(
 	id serial primary key,
 	host text not null,
 	port int not null,
 	uzytkownik text not null,
 	haslo text not null,
-	aktualne bool not null,
 	unique(host, port)
+);
+
+create table mydbs.ostatnio_uzyte(
+  baza text,
+  fk_wepu integer references mydbs.wersja_pumy(id),
+  fk_pola integer references mydbs.polaczenie(id)
 );
 
 insert into mydbs.wersja_pumy(wersja) values 
@@ -75,8 +75,8 @@ insert into mydbs.wersja_schematu(fk_wepu, fk_schemat, wersja_schematu) values
   (1, 27, '013.25'),
   (1, 28, '002.30');
 
-insert into mydbs.ostatnio_uzyte(baza, fk_wepu) values
-  ('', 1);
+insert into mydbs.polaczenie(host, port, uzytkownik, haslo) values
+	('localhost', 5432, 'postgres', 'Makaron86');
 
-insert into mydbs.polaczenie(host, port, uzytkownik, haslo, aktualne) values
-	('localhost', 5432, 'postgres', 'Makaron86', true); 
+insert into mydbs.ostatnio_uzyte(baza, fk_wepu, fk_pola) values
+  ('', 1, 1);

@@ -12,9 +12,9 @@ const dajPolaczenia = async (req, res) => {
 const dodajPolaczenie = async (req, res) => {
   const { host, port, username, password } = req.body;
   try {
-    const result = await db.query(`insert into mydbs.polaczenie(host, port, uzytkownik, haslo, aktualne) 
-        values($1, $2, $3, $4, $5) returning *`, 
-      [host, port, username, password, false]);
+    const result = await db.query(`insert into mydbs.polaczenie(host, port, uzytkownik, haslo) 
+        values($1, $2, $3, $4) returning *`, 
+      [host, port, username, password]);
     res.json(result.rows[0]);
   } catch(err) {
     console.log(err);

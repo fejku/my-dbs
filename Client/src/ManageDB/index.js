@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Polacz from './Polacz';
 
 function ManageDB(props) {
 
-  // const [polaczenie, setPolaczenie] = useState("?");
+  const [ostatnioUzyte, setOstatnioUzyte] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/manage-db/ostatnio-uzyte")
+      .then(result => result.json())
+      .then(result => setOstatnioUzyte(result))
+  }, []);
  
   return (
-    <Polacz />
+    <div>
+      {ostatnioUzyte && <Polacz ostatnioUzyte={ostatnioUzyte} />}    
+    </div>
   )
 }
 

@@ -1,28 +1,51 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import './ListaBaz.css';
 
-function ListaBaz() {
+function ListaBaz(props) {
 
-  const [bazy, setBazy] = useState({
-    result: [],
-    aktualnaBaza: "?",
-  });
-
+  const [czyLadowanie, ustawLadowanie] = useState(true);
+  const [bazy, ustawBazy] = useState([]);  
+  const [czyBlad, ustawBlad] = useState(false);
+  
   useEffect(() => {
-    fetch("http://localhost:5000/manage-db/bazy")
-      .then(response => response.json())
-      .then(response => setBazy({
-        result: response,
-        aktualnaBaza: dajAktualnaBaze(response),
-      }));
-  }, [setBazy]);
+    ustawLadowanie(true);
+    ustawBlad(false);
 
-  function dajAktualnaBaze(bazy) {
-    return bazy[0];
-  }  
+    if (props.polaczenie) {
+      fetch("http://localhost:5000/manage-db/bazy", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(props.polaczenie),
+          }).then(response => response.json())
+            .then(response => {
+              if (response.error_code) {
+                ustawLadowanie(false);
+                ustawBazy([]);
+                ustawBlad(true);
+              } else {
+                ustawLadowanie(false);
+                ustawBazy(response);
+                ustawBlad(false);
+              }             
+            });      
+    }
+  }, [props])
 
-  const optionsBazy = bazy.result.map(baza => {
+  const ladowanie = <div className="ladowanie">Ładowanie ...</div>;
+
+  const blad = <div className="blad">Błąd połączenie z bazą danych</div>;
+
+  const optionsBazy = bazy.map(baza => {
     return <option name={baza} key={baza}>{baza}</option>
   })
+
+  const selectBazy = 
+    <select name="" id="sel" className="custom-select">
+      {optionsBazy}
+    </select>;
+
 
   return (
     <div className="row">
@@ -31,9 +54,9 @@ function ListaBaz() {
           <div className="input-group-prepend">
             <label htmlFor="sel" className="input-group-text">Bazy</label>
           </div>
-          <select name="" id="sel" className="custom-select">
-            {optionsBazy}
-          </select>
+          {czyLadowanie && ladowanie}
+          {czyBlad && blad}
+          {!czyLadowanie && !czyBlad && selectBazy}          
         </div>
       </div>      
     </div>
