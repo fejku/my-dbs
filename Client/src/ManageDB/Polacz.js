@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import DodajPolaczenie from './DodajPolaczenie';
 import ListaBaz from './ListaBaz';
+import WersjePumy from './WersjePumy';
+import WersjeSchematu from './WersjeSchematu';
 
 function Polacz(props) {
 
   const [ostatnioUzyte, setOstatnioUzyte] = useState(props.ostatnioUzyte);
   const [polaczenia, setPolaczenia] = useState([]);
   const [czyDodawanie, setDodawanie] = useState(false);
-  const [czyDodano, setDodano] = useState(false);
+  const [czyDodano, setDodano] = useState(false); 
+  const [wersjaPumy, setWersjaPumy] = useState('');
+  // const [wersjaSchematu, setWersjaSchematu] = useState(null);  
 
   useEffect(() => {
     fetch("http://localhost:5000/manage-db/polaczenia")
@@ -20,11 +24,11 @@ function Polacz(props) {
   }
 
   function handleZmienPolaczenia(e) {
-    setOstatnioUzyte({ ... ostatnioUzyte, fk_pola: e.target.value });
+    setOstatnioUzyte({ ...ostatnioUzyte, fk_pola: e.target.value });
   }
 
   function dajWybranePolaczenie() {
-    return polaczenia.find(polaczenie => polaczenie.id == ostatnioUzyte.fk_pola);
+    return polaczenia.find(polaczenie => polaczenie.id.toString() === ostatnioUzyte.fk_pola);
   }
 
   const optionsPolaczenia = polaczenia.map(polaczenie => {
@@ -49,7 +53,9 @@ function Polacz(props) {
         </div>
       </div>
       { czyDodawanie && <DodajPolaczenie setDodawanie={setDodawanie} setDodano={setDodano} />}
-      <ListaBaz polaczenie={dajWybranePolaczenie()} />
+      <ListaBaz polaczenie={dajWybranePolaczenie()} />   
+      <WersjePumy wersjaPumy={{wersjaPumy, setWersjaPumy}} />
+      <WersjeSchematu wersjaPumy={wersjaPumy} />
     </div>
   )
 }
