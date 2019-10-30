@@ -11,7 +11,7 @@ function Polacz(props) {
   const [czyDodawanie, setDodawanie] = useState(false);
   const [czyDodano, setDodano] = useState(false); 
   const [wersjaPumy, setWersjaPumy] = useState('');
-  // const [wersjaSchematu, setWersjaSchematu] = useState(null);  
+  const [wersjeSchematow, setWersjeSchematow] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:5000/manage-db/polaczenia")
@@ -55,7 +55,12 @@ function Polacz(props) {
       { czyDodawanie && <DodajPolaczenie setDodawanie={setDodawanie} setDodano={setDodano} />}
       <ListaBaz polaczenie={dajWybranePolaczenie()} />   
       <WersjePumy wersjaPumy={{wersjaPumy, setWersjaPumy}} />
-      <WersjeSchematu wersjaPumy={wersjaPumy} />
+      <WersjeSchematu wersjaPumy={wersjaPumy} wersjeSchematow={{wersjeSchematow, setWersjeSchematow}} />
+      <div className="row">
+        <div className="col">
+          <button type="submit" className="btn btn-outline-secondary">Zapisz</button>
+        </div>
+      </div>
     </div>
   )
 }
