@@ -1,37 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import './ListaBaz.css';
 
-function ListaBaz(props) {
+function ListaBaz({polaczenie, baza: {baza, setBaza}}) {
 
   const [czyLadowanie, ustawLadowanie] = useState(true);
-  const [bazy, ustawBazy] = useState([]);  
+  const [bazy, setBazy] = useState([]);  
   const [czyBlad, ustawBlad] = useState(false);
   
   useEffect(() => {
     ustawLadowanie(true);
     ustawBlad(false);
 
-    if (props.polaczenie) {
+    if (polaczenie) {
       fetch("http://localhost:5000/manage-db/bazy", {
             method: "POST",
             headers: {
               "Content-Type": "application/json"
             },
-            body: JSON.stringify(props.polaczenie),
+            body: JSON.stringify(polaczenie),
           }).then(response => response.json())
             .then(response => {
               if (response.error_code) {
                 ustawLadowanie(false);
-                ustawBazy([]);
+                setBaza('');
+                setBazy([]);
                 ustawBlad(true);
               } else {
                 ustawLadowanie(false);
-                ustawBazy(response);
+                setBaza(response[0]);
+                setBazy(response);
                 ustawBlad(false);
               }             
             });      
     }
-  }, [props])
+  }, [polaczenie])
 
   const ladowanie = <div className="ladowanie">Ładowanie ...</div>;
 
@@ -42,7 +44,7 @@ function ListaBaz(props) {
   })
 
   const selectBazy = 
-    <select name="" id="sel" className="custom-select">
+    <select name="" id="sel" className="custom-select" value={baza} onChange={e => setBaza(e.target.value)}>
       {optionsBazy}
     </select>;
 
