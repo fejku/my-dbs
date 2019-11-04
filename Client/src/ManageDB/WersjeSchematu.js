@@ -12,8 +12,9 @@ function WersjeSchematu({wersjaPumy, wersjeSchematow: {wersjeSchematow, setWersj
         body: JSON.stringify({wersjaPumy}),
       })
         .then(result => result.json())
-        .then(result => setWersjeSchematow(result));
+        .then(result => setWersjeSchematow(result.sort((a, b) => (a.nazwa_schematu > b.nazwa_schematu) ? 1 : -1)));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wersjaPumy])
 
   const handleZmienWersje = (e) => {

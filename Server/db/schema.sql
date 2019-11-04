@@ -40,10 +40,10 @@ insert into mydbs.wersja_pumy(wersja) values
   ('04.159');
     
 insert into mydbs.schemat(nazwa) values 
-  ('admi'), ('alko'), ('budz'), ('dodm'), ('ed'), ('drpa'), ('ewlu'), ('eksp'),
+  ('admi'), ('alko'), ('budz'), ('dodm'), ('ed'), ('drpa'), ('ewlu'), ('eksp'), 
   ('fk'), ('geod'), ('godp'), ('grun'), ('hurt'), ('izro'), ('kadr'), ('kont'),
   ('opro'), ('opd'), ('poda'), ('psy'), ('post'), ('srtr'), ('symu'), ('szab'),
-  ('ewluwybo'), ('usc'), ('wipo'), ('zasw');
+  ('ewluwybo'), ('usc'), ('wipo'), ('zasw'), ('fakt'), ('roni');
 
 insert into mydbs.wersja_schematu(fk_wepu, fk_schemat, wersja_schematu) values 
   (1, 1, '011.28'),
@@ -73,7 +73,9 @@ insert into mydbs.wersja_schematu(fk_wepu, fk_schemat, wersja_schematu) values
   (1, 25, '003.95'),
   (1, 26, '005.33'),
   (1, 27, '013.25'),
-  (1, 28, '002.30');
+  (1, 28, '002.30'),
+  (1, 29, '015.01'),
+  (1, 30, '010.00');  
 
 insert into mydbs.polaczenie(host, port, uzytkownik, haslo) values
 	('localhost', 5432, 'postgres', 'Makaron86');
